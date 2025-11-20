@@ -16,7 +16,7 @@ const findAllAthletes = async (req, res) => {
 const findOneAthlete = async (req, res) => {
   const { id } = req.params;
   try {
-    const athlete = await Athlete.findOne({ _id: id }).select("_id name image discipline categories")
+    const athlete = await Athlete.findOne({ _id: id }).populate("categories", "name slug image")
     .populate("categories", "name slug image");
     return res.status(200).send({ message: "Atleta encontrado", athlete });
   } catch (error) {
@@ -27,7 +27,7 @@ const findOneAthlete = async (req, res) => {
 const addAthlete = async (req, res) => {
   const { name, country, discipline, image, medals, history, categories } = req.body;
   try {
-    const athlete = new Athlete({ name, country, discipline, image, medals, history });
+    const athlete = new Athlete({ name, country, discipline, image, medals, history, categories });
     await athlete.save();
     return res.status(200).send({ message: "Atleta agregado", athlete });
   } catch (error) {

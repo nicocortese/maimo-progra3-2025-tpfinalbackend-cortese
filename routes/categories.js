@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
 // Listar categorías
 router.get("/", async (_req, res) => {
   try {
-    const categories = await Category.find().select("_id name slug");
+    const categories = await Category.find().select("_id name slug image");
     return res
       .status(200)
       .send({ message: "Todas las categorías", categories });
