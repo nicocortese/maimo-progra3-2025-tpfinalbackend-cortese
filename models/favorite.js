@@ -10,14 +10,16 @@ const AthleteSchema = new mongoose.Schema({
 const UserSchema = new mongoose.Schema({
     name: { type: String, required: true},
     surname: { type: String, required: true},
-    email: { type: String, required: true},
+    email: { type: String, required: true, unique: true},
 });
 
 const FavoriteSchema = new mongoose.Schema({
     user: { type: UserSchema, required: true },
-    athletes: { type: [AthleteSchema], required: true },
+    athletes: { type: [AthleteSchema], default: [] },
 },
 { timestamps: true }
 );
+
+
 
 export default mongoose.model("Favorite", FavoriteSchema, "Favorites");

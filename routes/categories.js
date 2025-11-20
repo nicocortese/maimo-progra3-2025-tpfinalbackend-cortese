@@ -6,8 +6,8 @@ const router = express.Router();
 // Creación de categoría (name + slug)
 router.post("/", async (req, res) => {
   try {
-    const { name, slug } = req.body;
-    const category = new Category({ name, slug });
+    const { name, slug, image } = req.body;
+    const category = new Category({ name, slug, image });
     await category.save();
     return res.status(201).send({ message: "Categoría creada", category });
   } catch (error) {
@@ -64,7 +64,7 @@ router.get("/:key", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, slug } = req.body;
+    const { name, slug, image } = req.body;
 
     const category = await Category.findById(id);
     if (!category) {
@@ -73,6 +73,7 @@ router.put("/:id", async (req, res) => {
 
     if (name) category.name = name;
     if (slug) category.slug = slug;
+    if (image) category.image = image;
 
     await category.save();
 

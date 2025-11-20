@@ -10,5 +10,6 @@ const categorySchema = new Schema({
     lowercase: true,
     trim: true,
   },
+  image: { type: String}
 });
 export default mongoose.model("Category", categorySchema, "Categories");

@@ -4,7 +4,7 @@ import Athlete from "../models/athletes.js";
 
 const findAllAthletes = async (req, res) => {
   try {
-    const athletes = await Athlete.find().select("_id");
+    const athletes = await Athlete.find().select("_id name image discipline categories");
     return res
       .status(200)
       .send({ message: "Todos los atletas", athletes: athletes });
@@ -16,7 +16,8 @@ const findAllAthletes = async (req, res) => {
 const findOneAthlete = async (req, res) => {
   const { id } = req.params;
   try {
-    const athlete = await Athlete.findOne({ _id: id }).select("_id");
+    const athlete = await Athlete.findOne({ _id: id }).select("_id name image discipline categories")
+    .populate("categories", "name slug image");
     return res.status(200).send({ message: "Atleta encontrado", athlete });
   } catch (error) {
     return res.status(501).send({ message: "Hubo un error", error });
@@ -24,13 +25,13 @@ const findOneAthlete = async (req, res) => {
 };
 
 const addAthlete = async (req, res) => {
-  const { name, country, discipline, image, medals, history } = req.body;
+  const { name, country, discipline, image, medals, history, categories } = req.body;
   try {
     const athlete = new Athlete({ name, country, discipline, image, medals, history });
     await athlete.save();
     return res.status(200).send({ message: "Atleta agregado", athlete });
   } catch (error) {
-    console.log("ERROR EN addAthlete:", error);  // <-- AGREGAR ESTO
+    console.log("ERROR EN addAthlete:", error); 
     return res.status(501).send({ message: "Hubo un error", error });
   }
 };
@@ -53,7 +54,7 @@ const deleteAthlete = async (req, res) => {
 
 const updateAthlete = async (req, res) => {
   const { id } = req.params;
-  const { name, country, discipline, image, medals, history } = req.body;
+  const { name, country, discipline, image, medals, history, categories } = req.body;
   try {
     const athleteToUpdate = await Athlete.findOne({ _id: id });
     if (!athleteToUpdate) {
@@ -78,6 +79,10 @@ const updateAthlete = async (req, res) => {
     }
      if (history) {
       athleteToUpdate.history = history;
+    }
+
+    if (categories) {
+      athleteToUpdate.categories = categories;
     }
 
     await athleteToUpdate.save();

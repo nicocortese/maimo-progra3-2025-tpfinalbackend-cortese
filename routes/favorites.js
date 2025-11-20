@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import favorite from "../models/favorite.js";
+import Favorite from "../models/favorite.js";
 
 router.post("/", async (req, res) => {
     try {
